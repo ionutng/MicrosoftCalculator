@@ -7,6 +7,7 @@ namespace CalculatorProgram
         static void Main(string[] args)
         {
             bool endApp = false;
+            int counter = 0;
             // Display title as the C# console calculator app.
             Console.WriteLine("Console Calculator in C#\r");
             Console.WriteLine("------------------------\n");
@@ -60,7 +61,10 @@ namespace CalculatorProgram
                         Console.WriteLine("This operation will result in a mathematical error.\n");
                     }
                     else
+                    {
                         Console.WriteLine("Your result: {0:0.##}\n", result);
+                        counter++;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -74,8 +78,12 @@ namespace CalculatorProgram
                 if (Console.ReadLine() == "n")
                     endApp = true;
 
-                Console.WriteLine("\n"); // Friendly linespacing.
+                Console.WriteLine(); // Friendly linespacing.
             }
+            if (counter == 1)
+                Console.WriteLine($"The calcualtor was used {counter} time.");
+            else
+                Console.WriteLine($"The calcualtor was used {counter} times.");
 
             // Add call to close the JSON writer before return.
             calculator.Finish();
