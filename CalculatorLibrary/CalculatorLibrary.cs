@@ -5,6 +5,7 @@ namespace CalculatorLibrary
     public class Calculator
     {
         JsonWriter writer;
+        List<string> latestCalculations = new List<string>();
         public Calculator() 
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -58,6 +59,35 @@ namespace CalculatorLibrary
             writer.WriteEndObject();
 
             return result;
+        }
+
+        public void AddToList(double num1, double num2, string op, double result)
+        {
+            string calculation;
+            string operatorr = string.Empty;
+
+            if (op == "a") operatorr = "+";
+            else if (op == "s") operatorr = "-";
+            else if (op == "m") operatorr = "*";
+            else if (op == "d") operatorr = "/";
+
+            calculation = num1 + " " + operatorr + " " + num2 + " = " + Math.Round(result,2);
+            latestCalculations.Add(calculation);
+        }
+
+        public void ShowLatestCalculations()
+        {
+            int counter = 0;
+
+            Console.WriteLine();
+            foreach (string calculation in latestCalculations)
+                Console.WriteLine($"Calculation #{++counter}: {calculation}");
+        }
+
+        public void DeleteLatestCalculations()
+        {
+            latestCalculations.Clear();
+            Console.WriteLine("\nAll the calculations have been deleted. The list is now empty.");
         }
 
         public void Finish()

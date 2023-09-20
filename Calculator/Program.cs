@@ -64,6 +64,7 @@ namespace CalculatorProgram
                     {
                         Console.WriteLine("Your result: {0:0.##}\n", result);
                         counter++;
+                        calculator.AddToList(cleanNum1, cleanNum2, op, result);
                     }
                 }
                 catch (Exception e)
@@ -84,6 +85,15 @@ namespace CalculatorProgram
                 Console.WriteLine($"The calcualtor was used {counter} time.");
             else
                 Console.WriteLine($"The calcualtor was used {counter} times.");
+
+            if (counter > 0)
+            {
+                calculator.ShowLatestCalculations();
+                Console.WriteLine("\nDo you wish to delete the list?");
+                Console.Write("Press 'y' and Enter if you wish to do so, or press any other key and Enter if you wish to keep the list: ");
+                if (Console.ReadLine().Trim().ToLower() == "y")
+                    calculator.DeleteLatestCalculations();
+            }
 
             // Add call to close the JSON writer before return.
             calculator.Finish();
