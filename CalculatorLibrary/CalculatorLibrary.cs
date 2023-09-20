@@ -90,6 +90,54 @@ namespace CalculatorLibrary
             Console.WriteLine("\nAll the calculations have been deleted. The list is now empty.");
         }
 
+        public double ReturnACalculationResult(int operationNumber)
+        {
+            double result = 0;
+
+            if (operationNumber > latestCalculations.Count || operationNumber <= 0)
+                return double.NaN;
+
+            for (int i = 0; i < latestCalculations.Count; i++)
+            {
+                if (i + 1 == operationNumber)
+                {
+                    result = Convert.ToDouble(latestCalculations[i].Substring(latestCalculations[i].IndexOf("=") + 1));
+                }
+            }
+
+            return result;
+        }
+
+        public double ReturnANumber()
+        {
+            string numInput1 = "";
+
+            numInput1 = Console.ReadLine();
+
+            double cleanNum1 = 0;
+            while (!double.TryParse(numInput1, out cleanNum1))
+            {
+                Console.Write("This is not valid input. Please enter an integer value: ");
+                numInput1 = Console.ReadLine();
+            }
+
+            return cleanNum1;
+        }
+
+        public string ReturnAnOperation()
+        {
+            Console.WriteLine("\nChoose an operator from the following list:");
+            Console.WriteLine("\ta - Add");
+            Console.WriteLine("\ts - Subtract");
+            Console.WriteLine("\tm - Multiply");
+            Console.WriteLine("\td - Divide");
+            Console.Write("Your option? ");
+
+            string op = Console.ReadLine();
+
+            return op;
+        }
+
         public void Finish()
         {
             writer.WriteEndArray();

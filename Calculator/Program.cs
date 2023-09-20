@@ -17,41 +17,18 @@ namespace CalculatorProgram
             while (!endApp)
             {
                 // Declare variables and set to empty.
-                string numInput1 = "";
-                string numInput2 = "";
                 double result = 0;
 
-                // Ask the user to type the first number.
+                // Ask the user to type the numbers.
                 Console.Write("Type a number, and then press Enter: ");
-                numInput1 = Console.ReadLine();
+                double cleanNum1 = calculator.ReturnANumber();
 
-                double cleanNum1 = 0;
-                while (!double.TryParse(numInput1, out cleanNum1))
-                {
-                    Console.Write("This is not valid input. Please enter an integer value: ");
-                    numInput1 = Console.ReadLine();
-                }
-
-                // Ask the user to type the second number.
                 Console.Write("Type another number, and then press Enter: ");
-                numInput2 = Console.ReadLine();
+                double cleanNum2 = calculator.ReturnANumber();
 
-                double cleanNum2 = 0;
-                while (!double.TryParse(numInput2, out cleanNum2))
-                {
-                    Console.Write("This is not valid input. Please enter an integer value: ");
-                    numInput2 = Console.ReadLine();
-                }
 
                 // Ask the user to choose an operator.
-                Console.WriteLine("Choose an operator from the following list:");
-                Console.WriteLine("\ta - Add");
-                Console.WriteLine("\ts - Subtract");
-                Console.WriteLine("\tm - Multiply");
-                Console.WriteLine("\td - Divide");
-                Console.Write("Your option? ");
-
-                string op = Console.ReadLine();
+                string op = calculator.ReturnAnOperation();
 
                 try
                 {
@@ -81,18 +58,81 @@ namespace CalculatorProgram
 
                 Console.WriteLine(); // Friendly linespacing.
             }
+
             if (counter == 1)
                 Console.WriteLine($"The calcualtor was used {counter} time.");
             else
                 Console.WriteLine($"The calcualtor was used {counter} times.");
 
+            // If the calculator was used.
             if (counter > 0)
             {
+                bool endLoop = false;
                 calculator.ShowLatestCalculations();
+
                 Console.WriteLine("\nDo you wish to delete the list?");
                 Console.Write("Press 'y' and Enter if you wish to do so, or press any other key and Enter if you wish to keep the list: ");
+
                 if (Console.ReadLine().Trim().ToLower() == "y")
                     calculator.DeleteLatestCalculations();
+                else
+                {
+                    while (!endLoop)
+                    {
+                        Console.WriteLine("\nDo you wish to use a previous result and continue a calculation?");
+                        Console.Write("Press 'y' and Enter if you wish to do so, or press any other key and Enter if you don't: ");
+
+                        if (Console.ReadLine().Trim().ToLower() == "y")
+                        {
+                            // Take the calculation number from the user and store it in a value;
+                            Console.Write("\nType the number of the calculation that you want, and then press Enter: ");
+                            double calculationNumber = calculator.ReturnANumber();
+
+                            // Get the result number
+                            double firstNumber = calculator.ReturnACalculationResult(Convert.ToInt32(calculationNumber));
+
+                            if (double.IsNaN(firstNumber))
+                            {
+                                Console.WriteLine("The number of the calculation was incorrect.");
+                                break;
+                            }
+
+                            Console.WriteLine($"\nYou have chosen operation number {calculationNumber} and the first number is {firstNumber}.");
+
+                            // Ask the user for a second number
+                            Console.Write("Type the second number, and then press Enter: ");
+                            double secondNumber = calculator.ReturnANumber();
+
+                            // Ask the user to choose an operation
+                            string op = calculator.ReturnAnOperation();
+
+                            double result;
+
+                            try
+                            {
+                                result = calculator.DoOperation(firstNumber, secondNumber, op);
+                                if (double.IsNaN(result))
+                                {
+                                    Console.WriteLine("This operation will result in a mathematical error.\n");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Your result: {0:0.##}\n", result);
+                                    counter++;
+                                    calculator.AddToList(firstNumber, secondNumber, op, result);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                            }
+
+                            calculator.ShowLatestCalculations();
+                        }
+                        else
+                            endLoop = true;
+                    }
+                }
             }
 
             // Add call to close the JSON writer before return.
